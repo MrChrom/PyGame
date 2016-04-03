@@ -30,4 +30,3 @@ while running:
     screen.blit(surf, (400, 300))
     pygame.display.flip()
 
-    
