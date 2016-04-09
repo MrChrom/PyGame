@@ -5,10 +5,6 @@ import random
 # import pygame.locals for easier access to key coordinates
 from pygame.locals import *
 
-# Define our player object and call super to give it all the properties and methods of pygame.sprite.Sprite
-pygame.sprite.Sprite
-# The surface we draw on the screen is now a property of 'player'
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -54,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+
 class Cloud(pygame.sprite.Sprite):
     def __init__(self):
         super(Cloud, self).__init__()
@@ -68,11 +65,15 @@ class Cloud(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Bullet, self).__init__()
+        self.image =
+
 # initialize pygame
 pygame.init()
 
 # create the screen object
-# here we pass it a size of 800x600
 screen = pygame.display.set_mode((800, 600))
 
 # Create a custom event for adding a new enemy.
@@ -93,20 +94,16 @@ all_sprites = pygame.sprite.Group()
 
 # instantiate our player; right now he's just a rectangle
 player = Player()
+enemy = Enemy()
 
 # Variable to keep our main loop running
 running = True
 
-enemy = Enemy()
-
-ADDENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(ADDENEMY, 250)
 
 # Our main loop!
 while running:
 
     pygame.time.delay(15)
-
 
     for event in pygame.event.get():
         if event.type == KEYDOWN:
@@ -125,6 +122,11 @@ while running:
     screen.blit(background, (0, 0))
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
+    if pressed_keys[K_c]:
+        new_cloud = Cloud()
+        all_sprites.add(new_cloud)
+        clouds.add(new_cloud)
+
     enemies.update()
     clouds.update()
     for entity in all_sprites:
