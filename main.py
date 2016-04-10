@@ -49,6 +49,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
+        if pygame.sprite.spritecollideany(self, bullets):
+            self.kill()
 
 
 class Cloud(pygame.sprite.Sprite):
@@ -65,10 +67,19 @@ class Cloud(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self):
         super(Bullet, self).__init__()
-        self.image =
+        self.image = pygame.image.load('ref/bullet.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(midleft=player.rect.center)
+
+    def update(self):
+        self.rect.move_ip(7, 0)
+        if self.rect.right > 800:
+            self.kill()
+
 
 # initialize pygame
 pygame.init()
@@ -89,6 +100,7 @@ background.fill((135, 206, 250))
 
 enemies = pygame.sprite.Group()
 clouds = pygame.sprite.Group()
+bullets = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
 
@@ -122,17 +134,18 @@ while running:
     screen.blit(background, (0, 0))
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
-    if pressed_keys[K_c]:
-        new_cloud = Cloud()
-        all_sprites.add(new_cloud)
-        clouds.add(new_cloud)
+    if pressed_keys[K_SPACE]:
+        new_bullet = Bullet()
+        all_sprites.add(new_bullet)
+        bullets.add(new_bullet)
 
     enemies.update()
     clouds.update()
+    bullets.update()
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
 
-    if pygame.sprite.spritecollideany(player, enemies):
-        player.kill()
+    #if pygame.sprite.spritecollideany(player, enemies):
+        #player.kill()
 
     pygame.display.flip()
