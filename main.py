@@ -10,8 +10,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         self.image = pygame.image.load('ref/jet.png').convert()
+        print(self.image)
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        print(self.image)
         self.rect = self.image.get_rect()
+        print(self.image.get_rect())
+        print(self.rect)
         all_sprites.add(self)
 
     def update(self, pressed_keys):
