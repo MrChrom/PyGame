@@ -9,11 +9,10 @@ from pygame.locals import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.image = anim
-        self.imageRef = pygame.image.load('ref/jet.000.png').convert()
-        self.imageRef.set_colorkey((255, 255, 255), RLEACCEL)
-        self.rect = self.imageRef.get_rect()
-        print(self.rect)
+        self.image = pygame.image.load('ref/jet.000.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect()
+        self.anim = anim
         # all_sprites.add(self)
 
     def update(self, pressed_keys):
@@ -40,8 +39,10 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.image = pygame.image.load('ref/missile.png').convert()
+        # self.image = pygame.image.load('ref/missile.png').convert()
+        self.image = fireFrame0
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.anim = fireanim
         self.rect = self.image.get_rect(
             center=(random.randint(820, 900), random.randint(0, 600))
         )
@@ -76,7 +77,6 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.image.load('ref/bullet.png').convert()
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(midleft=player.rect.center)
-        print(player.rect.center)
 
     def update(self):
         self.rect.move_ip(7, 0)
@@ -121,6 +121,13 @@ anim = pyganim.PygAnimation(frames)
 print(frames)
 anim.play()
 
+fireFrame0 = Frame('ref/fireball.000.png')
+fireFrame1 = Frame('ref/fireball.001.png')
+fireFrames = [(fireFrame0, 100), (fireFrame1, 100)]
+fireanim = pyganim.PygAnimation(fireFrames)
+print(fireanim)
+fireanim.play()
+
 # instantiate our player; right now he's just a rectangle
 player = Player()
 enemy = Enemy()
@@ -158,9 +165,13 @@ while running:
     enemies.update()
     clouds.update()
     bullets.update()
-    player.image.blit(screen, player.rect)
+    player.anim.blit(screen, player.rect)
     for entity in all_sprites:
-        screen.blit(entity.image, entity.rect)
+        print('Name: %s ')
+        try:
+            entity.anim.blit(screen, entity.rect)
+        except AttributeError:
+            screen.blit(entity.image, entity.rect)
 
     #if pygame.sprite.spritecollideany(player, enemies):
         #player.kill()
